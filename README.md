@@ -1,11 +1,18 @@
 zim-plugin-cryptselection
 =========================
 
-A plugin for Zim-Wiki_ which encrypts the current selection, replacing plaintext 
+A plugin for Zim-Wiki which encrypts the current selection, replacing plaintext 
 in a ZIM page by its encrypted representation. 
 
-If a complete -----BEGIN PGP MESSAGE----- ... -----END PGP MESSAGE----- block is
-selected then decrypt the block. For that to work the passphrase of the required
+If a complete 
+
+```
+-----BEGIN PGP MESSAGE----- 
+... 
+-----END PGP MESSAGE----- 
+```
+
+block is selected then decrypt the block. For that to work the passphrase of the required
 secret key has to be provided via a pinentry popup, i.e. the gpg-agent has to be
 started before zim and has to be configured to display a pinentry popup.
 
