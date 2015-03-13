@@ -34,6 +34,6 @@ This fork mainly deals with
 
 On Windows machine, you will need to use the source code instead of the binary. (I am not sure how to install plugins for the binary version.)
 
-browse to zim/plugins and `git clone https://github.com/daniellowtw/zim-plugin-cryptselection.git cryptselection`
+browse to zim/plugins and `git clone https://github.com/daniellowtw/zim-wiki-plugin-cryptselection.git cryptselection`
 
 Zim plugin written by Klaus Holler and modified by Daniel Low
