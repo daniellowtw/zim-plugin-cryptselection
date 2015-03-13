@@ -1,3 +1,12 @@
+# Copyright 2015 Daniel Low <github.com/daniellowtw>
+# License:  same as zim (gpl)
+#
+# Changes: 
+# * Mainly to make it work on Windows
+# * Toggle between decrypted and encrypted text
+# * Preference asks for path and public key to encrypt under
+
+
 # -*- coding: utf-8 -*-
 # cryptselection plugin for zim
 #
@@ -40,18 +49,14 @@ If -----BEGIN PGP MESSAGE----- is found at selection
 start and -----END PGP MESSAGE----- found at selection
 end then decrypt, otherwise encrypt.
 '''), # T: plugin description
-        'author': 'Klaus Holler',
+        'author': 'Klaus Holler, Daniel Low',
         'help': 'Plugins:Crypt Selection',
     }
 
     plugin_preferences = [
         # key, type, label, default
-        ('encryption_command', 'string',
-                _('Encryption Command (reads plaintext from stdin)'),
-                '/usr/bin/gpg2 --always-trust -ear RECIPIENT'), # T: plugin preference
-        ('decryption_command', 'string',
-                _('Decryption Command (reads encrypted text from stdin)'),
-                '/usr/bin/gpg2 -d'), # T: plugin preference
+        ('GPG_path', 'string',_('GPG path'),'"C:\\Program Files (x86)\\GNU\\GnuPG\\pub\\gpg.exe"'), # T: plugin preference
+        ('RECIPIENT', 'string', _("The public key to use"), 'Your email address')
     ]
 
 
@@ -74,7 +79,7 @@ class MainWindowExtension(WindowExtension):
         WindowExtension.__init__(self, plugin, window)
         self.preferences = plugin.preferences
 
-    @action(_('Cr_ypt selection')) # T: menu item
+    @action(_('Crypt selection')) # T: menu item
     # TODO: add stock parameter to set icon
     def crypt_selection(self):
         buffer = self.window.pageview.view.get_buffer()
@@ -98,27 +103,20 @@ class MainWindowExtension(WindowExtension):
                 re.search(r'\s*\-{5}END PGP MESSAGE\-{5}[\n\s]*$', sel_text) is None):
                 # default is encryption:
                 encrypt = True
-                cryptcmd = self.preferences['encryption_command'].split(" ")
+                cryptcmd = self.preferences['GPG_path'] + " --always-trust -ear " + self.preferences['RECIPIENT']
             else:
                 # on-the-fly decryption if selection is a full PGP encrypted block
                 encrypt = False
-                cryptcmd = self.preferences['decryption_command'].split(" ")
+                cryptcmd = self.preferences['GPG_path'] + " -d"
             newtext = None
-            p = Popen(cryptcmd, stdin=PIPE, stdout=PIPE)
+            p = Popen("".join(cryptcmd), stdin=PIPE, stdout=PIPE)
             newtext, err = p.communicate(input=sel_text)
             if p.returncode == 0:
                 # replace selection only if crypt command was successful
                 # (incidated by returncode 0)
-                if encrypt is True:
-                    bounds = map(buffer.get_iter_at_offset, self_bounds)
-                    buffer.delete(*bounds)
-                    buffer.insert_at_cursor("\n%s\n" % newtext)
-                else:
-                    # just show decrypted text in popup
-                    MessageDialog(self.window.ui,
-                        _("Decrypted Text: \n" + newtext)).run()
+                bounds = map(buffer.get_iter_at_offset, self_bounds)
+                buffer.delete(*bounds)
+                buffer.insert_at_cursor("\n%s\n" % newtext)
             else:
                 logger.warn("crypt command '%s' returned code %d." % (cryptcmd,
                             p.returncode))
-
-# :mode=python:tabSize=4:indentSize=4:noTabs=true:wrap=soft:maxLineLen=90:

@@ -9,22 +9,24 @@ selected then decrypt the block. For that to work the passphrase of the required
 secret key has to be provided via a pinentry popup, i.e. the gpg-agent has to be
 started before zim and has to be configured to display a pinentry popup.
 
-Encryption and decryption commands to be used have to be configured once in 
-the configuration dialog, use e.g. 
+# Instructions
 
-* as encryption command: '/usr/bin/gpg2 --always-trust -ear TheRecipientId'
+Please view the original author's page for other info.
 
-* as decryption command: '/usr/bin/gpg2 -d'
+This fork mainly deals with 
 
+* Setting the default to work in Windows
+* Toggle between plaintext and ciphertext
+* Changed the preferences to ask for default public key to use and path to gpg.
 
-The plugin may be installed (like all Zim-Plugins_) by cloning it to one of Zim's
-plugin search directories, like ~/.local/share/zim/plugins on Linux:
+## Requirements
 
-  cd ~/.local/share/zim/plugins &&
-  git clone https://github.com/k3ho/zim-plugin-cryptselection.git cryptselection
+* Have a RSA key established
 
-Zim plugin written by Klaus Holler (kho at gmx dot at)
+# Installation
 
+On Windows machine, you will need to use the source code instead of the binary. (I am not sure how to install plugins for the binary version.)
 
-.. _Zim-Wiki: http://www.zim-wiki.org/
-.. _Zim-Plugins: https://github.com/jaap-karssenberg/zim-wiki/wiki/Plugins
+browse to zim/plugins and `git clone https://github.com/daniellowtw/zim-plugin-cryptselection.git cryptselection`
+
+Zim plugin written by Klaus Holler and modified by Daniel Low
